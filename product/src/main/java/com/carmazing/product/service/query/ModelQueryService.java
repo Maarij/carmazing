@@ -9,6 +9,7 @@ import com.carmazing.product.generated.types.NumericComparisonInput;
 import com.carmazing.product.generated.types.SeriesInput;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -62,7 +63,11 @@ public class ModelQueryService {
                 : null
         ).and(priceSpecification);
 
-        return modelRepository.findAll(specification);
+        var sortOrders = ModelSpecification.sortOrdersFrom(
+                modelInput.getSorts()
+        );
+
+        return modelRepository.findAll(specification, Sort.by(sortOrders));
     }
 
     private Specification<Model> priceSpecificationFrom(Optional<NumericComparisonInput> priceInput) {

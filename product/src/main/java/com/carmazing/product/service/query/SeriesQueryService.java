@@ -39,7 +39,11 @@ public class SeriesQueryService {
                 : null
         );
 
-        return seriesRepository.findAll(specification);
+        var sortOrders = SeriesSpecification.sortOrdersFrom(
+                seriesInput.getSorts()
+        );
+
+        return seriesRepository.findAll(specification, Sort.by(sortOrders));
     }
 
 }

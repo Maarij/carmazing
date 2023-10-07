@@ -6,6 +6,7 @@ import com.carmazing.product.datasource.specification.ManufacturerSpecification;
 import com.carmazing.product.generated.types.ManufacturerInput;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,11 @@ public class ManufacturerQueryService {
                 null
         );
 
-        return manufacturerRepository.findAll(specification);
+        var sortOrders = ManufacturerSpecification.sortOrdersFrom(
+                manufacturerInput.getSorts()
+        );
+
+        return manufacturerRepository.findAll(specification, Sort.by(sortOrders));
     }
 
 }
