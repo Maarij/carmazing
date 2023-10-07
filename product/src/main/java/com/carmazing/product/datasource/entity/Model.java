@@ -30,15 +30,16 @@ public class Model {
     private int airbags;
     private boolean isAvailable;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "engine_uuid")
     private Engine engine;
 
     @OneToMany
     @JoinColumn(name = "model_uuid")
+    @Fetch(FetchMode.SUBSELECT)
     private List<Feature> features;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_uuid")
     private Series series;
 

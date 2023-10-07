@@ -18,9 +18,11 @@ public class Series {
 
     @OneToMany
     @JoinColumn(name = "series_uuid")
+    @BatchSize(size = 50)
     private List<Characteristic> characteristics;
 
     @OneToMany(mappedBy = "series")
+    @BatchSize(size = 50)
     private List<Model> models;
 
     @ManyToOne(fetch = FetchType.LAZY)

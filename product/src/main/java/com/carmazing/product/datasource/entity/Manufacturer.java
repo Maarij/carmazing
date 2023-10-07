@@ -19,6 +19,7 @@ public class Manufacturer {
     private String description;
 
     @OneToMany(mappedBy = "manufacturer")
+    @BatchSize(size = 50)
     private List<Series> series;
 
     public UUID getUuid() {
