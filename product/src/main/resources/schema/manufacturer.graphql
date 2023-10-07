@@ -1,4 +1,5 @@
 type Manufacturer {
+    uuid            : String!
     name            : String!
     originCountry   : String!
     description     : String
