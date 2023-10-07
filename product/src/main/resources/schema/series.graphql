@@ -3,4 +3,5 @@ type Series {
     name            : String!
     characteristics : [String!]
     models          : [Model!]!
+    manufacturer    : Manufacturer
 }
