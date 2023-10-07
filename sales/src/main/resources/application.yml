@@ -7,9 +7,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/product
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/sales
+    username:
+    password:
   jpa:
     hibernate:
       ddl-auto: none
