@@ -1,0 +1,19 @@
+type Model  {
+    name            : String
+    onTheRoadPrice  : PositiveFloat!
+    lengthMm        : NonNegativeInt!
+    widthMm         : NonNegativeInt!
+    heightMm        : NonNegativeInt!
+    exteriorColor   : String!
+    interiorColor   : String!
+    releaseYear     : Int!
+    transmission    : Transmission!
+    bodyType        : BodyType!
+    fuel            : Fuel!
+    doors           : NonNegativeInt!
+    airbags         : NonNegativeInt!
+    isAvailable     : Boolean!
+    engine          : Engine
+    features        : [Feature!]
+    series          : Series
+}

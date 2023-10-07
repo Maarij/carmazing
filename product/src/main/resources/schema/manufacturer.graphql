@@ -1,0 +1,6 @@
+type Manufacturer {
+    name            : String!
+    originCountry   : String!
+    description     : String
+    series          : [Series!]
+}
