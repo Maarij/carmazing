@@ -5,14 +5,18 @@ import com.carmazing.product.datasource.repository.ModelRepository;
 import com.carmazing.product.datasource.specification.ModelSpecification;
 import com.carmazing.product.generated.types.ManufacturerInput;
 import com.carmazing.product.generated.types.ModelInput;
+import com.carmazing.product.generated.types.NumericComparisonInput;
 import com.carmazing.product.generated.types.SeriesInput;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.carmazing.product.generated.types.NumericComparison.*;
 
 @Service
 public class ModelQueryService {
@@ -20,12 +24,15 @@ public class ModelQueryService {
     @Autowired
     private ModelRepository modelRepository;
 
-    public List<Model> findModels(Optional<ModelInput> input) {
+    public List<Model> findModels(Optional<ModelInput> input,
+                                  Optional<NumericComparisonInput> priceInput) {
         var modelInput = input.orElse(new ModelInput());
         var seriesInput = modelInput.getSeries() == null ? new SeriesInput()
                 : modelInput.getSeries();
         var manufacturerInput = seriesInput.getManufacturer() == null ?
                 new ManufacturerInput() : seriesInput.getManufacturer();
+
+        var priceSpecification = priceSpecificationFrom(priceInput);
 
         var specification = Specification.where(
                 StringUtils.isNotBlank(manufacturerInput.getName()) ?
@@ -50,8 +57,31 @@ public class ModelQueryService {
         ).and(modelInput.getTransmission() != null ?
                 ModelSpecification.transmissionEquals(modelInput.getTransmission())
                 : null
-        );
+        ).and(!CollectionUtils.isEmpty(modelInput.getExteriorColors()) ?
+                ModelSpecification.exteriorColorsLikeIgnoreCase(modelInput.getExteriorColors())
+                : null
+        ).and(priceSpecification);
 
         return modelRepository.findAll(specification);
+    }
+
+    private Specification<Model> priceSpecificationFrom(Optional<NumericComparisonInput> priceInput) {
+        if (priceInput.isEmpty()) {
+            return null;
+        }
+
+        var numericComparison = priceInput.get().getOperator();
+        var value = priceInput.get().getValue();
+
+        return switch (numericComparison) {
+            case GREATER_THAN_EQUALS:
+                yield ModelSpecification.priceGreaterThanEquals(value);
+            case LESS_THAN_EQUALS:
+                yield ModelSpecification.priceLessThanEquals(value);
+            case BETWEEN_INCLUSIVE:
+                var highValue = priceInput.get().getHighValue() > value ?
+                        priceInput.get().getHighValue() : value + 1;
+                yield ModelSpecification.priceBetween(value, highValue);
+        };
     }
 }

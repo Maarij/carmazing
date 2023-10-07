@@ -2,6 +2,7 @@ package com.carmazing.product.resolver;
 
 import com.carmazing.product.datasource.entity.Model;
 import com.carmazing.product.generated.types.ModelInput;
+import com.carmazing.product.generated.types.NumericComparisonInput;
 import com.carmazing.product.service.query.ModelQueryService;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsQuery;
@@ -18,7 +19,8 @@ public class ModelResolver {
     private ModelQueryService modelQueryService;
 
     @DgsQuery
-    public List<Model> models(@InputArgument Optional<ModelInput> modelInput) {
-        return modelQueryService.findModels(modelInput);
+    public List<Model> models(@InputArgument Optional<ModelInput> modelInput,
+                              @InputArgument Optional<NumericComparisonInput> priceInput) {
+        return modelQueryService.findModels(modelInput, priceInput);
     }
 }
