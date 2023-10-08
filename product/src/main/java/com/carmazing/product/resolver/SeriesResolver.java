@@ -24,4 +24,18 @@ public class SeriesResolver {
     public List<Series> series(@InputArgument Optional<SeriesInput> seriesInput) {
         return seriesQueryService.findSeries(seriesInput);
     }
+
+    @DgsQuery
+    public Connection<Series> seriesPagination(
+            @InputArgument Optional<SeriesInput> seriesInput,
+            DataFetchingEnvironment env,
+            @InputArgument Integer first,
+            @InputArgument Integer last,
+            @InputArgument String after,
+            @InputArgument String before
+    ) {
+        var fullResult = seriesQueryService.findSeries(seriesInput);
+
+        return new SimpleListConnection<>(fullResult).get(env);
+    }
 }

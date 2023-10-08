@@ -24,4 +24,18 @@ public class ManufacturerResolver {
     public List<Manufacturer> manufacturers(@InputArgument Optional<ManufacturerInput> manufacturerInput) {
         return manufacturerQueryService.findManufacturers(manufacturerInput);
     }
+
+    @DgsQuery
+    public Connection<Manufacturer> manufacturersPagination(
+            @InputArgument Optional<ManufacturerInput> manufacturerInput,
+            DataFetchingEnvironment env,
+            @InputArgument Integer first,
+            @InputArgument Integer last,
+            @InputArgument String after,
+            @InputArgument String before
+    ) {
+        var fullResult = manufacturerQueryService.findManufacturers(manufacturerInput);
+
+        return new SimpleListConnection<>(fullResult).get(env);
+    }
 }

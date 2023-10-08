@@ -23,6 +23,7 @@ dependencies {
 	implementation(platform('com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:7.3.2'))
 	implementation 'com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:7.3.2'
 	implementation 'com.netflix.graphql.dgs:graphql-dgs-extended-scalars:7.3.2'
+	implementation 'com.netflix.graphql.dgs:graphql-dgs-pagination:7.3.2'
 
 	implementation 'org.flywaydb:flyway-core'
 
