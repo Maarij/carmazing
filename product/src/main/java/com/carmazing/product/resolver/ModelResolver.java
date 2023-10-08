@@ -3,6 +3,7 @@ package com.carmazing.product.resolver;
 import com.carmazing.product.datasource.entity.Model;
 import com.carmazing.product.generated.types.ModelInput;
 import com.carmazing.product.generated.types.ModelPagination;
+import com.carmazing.product.generated.types.ModelSimple;
 import com.carmazing.product.generated.types.NumericComparisonInput;
 import com.carmazing.product.service.query.ModelQueryService;
 import com.netflix.graphql.dgs.DgsComponent;
@@ -33,8 +34,7 @@ public class ModelResolver {
             @InputArgument Optional<NumericComparisonInput> priceInput,
             DataFetchingEnvironment env,
             @InputArgument Integer page,
-            @InputArgument Integer size
-    ) {
+            @InputArgument Integer size) {
         var pageModel = modelQueryService.findModels(modelInput, priceInput, page, size);
 
         var paginatedResult = new ModelPagination();
@@ -47,5 +47,10 @@ public class ModelResolver {
         paginatedResult.setTotalElement(pageModel.getTotalElements());
 
         return paginatedResult;
+    }
+
+    @DgsQuery
+    public List<ModelSimple> simpleModels(@InputArgument List<String> modelUuids) {
+        return modelQueryService.findModels(modelUuids);
     }
 }

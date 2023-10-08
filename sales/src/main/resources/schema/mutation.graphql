@@ -23,4 +23,8 @@ type Mutation {
         customer        : UniqueCustomerInput!
         customerUpdate  : UpdateCustomerInput!
     ): CustomerMutationResponse!
+
+    addNewSalesOrder(
+        salesOrder      : AddSalesOrderInput!
+    ): SalesOrderMutationResponse
 }

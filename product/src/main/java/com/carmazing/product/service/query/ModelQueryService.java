@@ -3,10 +3,8 @@ package com.carmazing.product.service.query;
 import com.carmazing.product.datasource.entity.Model;
 import com.carmazing.product.datasource.repository.ModelRepository;
 import com.carmazing.product.datasource.specification.ModelSpecification;
-import com.carmazing.product.generated.types.ManufacturerInput;
-import com.carmazing.product.generated.types.ModelInput;
-import com.carmazing.product.generated.types.NumericComparisonInput;
-import com.carmazing.product.generated.types.SeriesInput;
+import com.carmazing.product.generated.types.*;
+import com.carmazing.product.mapper.ModelMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.carmazing.product.generated.types.NumericComparison.*;
 
@@ -143,5 +142,11 @@ public class ModelQueryService {
         );
 
         return modelRepository.findAll(specification, pageable);
+    }
+
+    public List<ModelSimple> findModels(List<String> modelUuids) {
+        var models = modelRepository.findAllById(modelUuids.stream().map(UUID::fromString).toList());
+
+        return models.stream().map(ModelMapper::toModelSimple).toList();
     }
 }

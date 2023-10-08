@@ -5,6 +5,7 @@ import com.carmazing.sales.generated.types.*;
 import com.carmazing.sales.mapper.CustomerMapper;
 import com.carmazing.sales.service.command.CustomerCommandService;
 import com.carmazing.sales.service.query.CustomerQueryService;
+import com.carmazing.sales.service.query.ProductQueryService;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
@@ -28,6 +29,9 @@ public class CustomerResolver {
 
     @Autowired
     private CustomerQueryService customerQueryService;
+
+    @Autowired
+    private ProductQueryService productQueryService;
 
     @DgsMutation
     public CustomerMutationResponse addNewCustomer(@InputArgument AddCustomerInput customer) {
@@ -65,15 +69,36 @@ public class CustomerResolver {
             @InputArgument Optional<UniqueCustomerInput> customer,
             DataFetchingEnvironment env,
             @InputArgument Integer page,
-            @InputArgument Integer size) {
-        var pageCustomer = customerQueryService.findCustomers(customer, page, size);
+            @InputArgument Integer size
+    ) {
+        var pageCustomer = customerQueryService.findCustomers(
+                customer, page, size
+        );
 
         var listCustomerAsEntity = Optional.ofNullable(pageCustomer.getContent())
                 .orElse(Collections.emptyList());
         var listCustomerAsGraphql = listCustomerAsEntity.stream()
                 .map(CustomerMapper::mapToGraphqlEntity).toList();
 
-        var pageConnection = new SimpleListConnection<>(pageCustomer.getContent()).get(env);
+        // load product detail
+//        var allSalesOrderItemsAsGraphql = listCustomerAsGraphql.stream()
+//                .flatMap(c -> c.getSalesOrders().stream())
+//                .flatMap(so -> so.getSalesOrderItems().stream())
+//                .toList();
+//
+//        for (var salesOrderItem : allSalesOrderItemsAsGraphql) {
+//            var simpleModel = productQueryService.loadSimpleModels(
+//                    Set.of(salesOrderItem.getModelUuid().toString())
+//            );
+//            salesOrderItem.setModelDetail(
+//                    simpleModel.get(salesOrderItem.getModelUuid())
+//            );
+//        }
+
+        var pageConnection = new SimpleListConnection<>(
+                listCustomerAsGraphql
+        ).get(env);
+
         var paginatedResult = new CustomerPagination();
 
         paginatedResult.setCustomerConnection(pageConnection);
