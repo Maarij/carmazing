@@ -12,4 +12,10 @@ type Mutation {
         customer        : UniqueCustomerInput!
         addresses       : [AddAddressInput!]!
     ): CustomerMutationResponse!
+
+    addDocumentToExistingCustomer(
+        customer        : UniqueCustomerInput!
+        documentType    : String! @NotBlank @Size(max: 30)
+        documentFile    : Upload!
+    ): CustomerMutationResponse!
 }
