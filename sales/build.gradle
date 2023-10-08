@@ -23,8 +23,11 @@ dependencies {
 	implementation(platform('com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:7.3.2'))
 	implementation 'com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:7.3.2'
 	implementation 'com.netflix.graphql.dgs:graphql-dgs-extended-scalars:7.3.2'
+	implementation 'com.netflix.graphql.dgs:graphql-dgs-pagination'
+	implementation 'com.netflix.graphql.dgs:graphql-dgs-extended-validation'
 
 	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
 
 	runtimeOnly 'org.postgresql:postgresql'
 
@@ -39,18 +42,17 @@ tasks.named('test') {
 generateJava {
 	packageName = 'com.carmazing.sales.generated'
 	typeMapping = [
-			"Date"             			: "java.time.LocalDate",
-			"DateTime"         			: "java.time.LocalDateTime",
-			"NonPositiveInt"   			: "java.lang.Integer",
-			"NonPositiveFloat" 			: "java.lang.Double",
-			"NonNegativeInt"   			: "java.lang.Integer",
-			"NonNegativeFloat" 			: "java.lang.Double",
-			"PositiveInt"      			: "java.lang.Integer",
-			"PositiveFloat"    			: "java.lang.Double",
-			"NegativeInt"      			: "java.lang.Integer",
-			"NegativeFloat"    			: "java.lang.Double",
-			"ManufacturerConnection"    : "graphql.relay.SimpleListConnection<Manufacturer>",
-			"SeriesConnection"    		: "graphql.relay.SimpleListConnection<Series>",
-			"ModelConnection"    		: "graphql.relay.Connection<com.carmazing.product.datasource.entity.Model>",
+			"Date"             		: "java.time.LocalDate",
+			"DateTime"        		: "java.time.ZonedDateTime",
+			"NonPositiveInt"   		: "java.lang.Integer",
+			"NonPositiveFloat" 		: "java.lang.Double",
+			"NonNegativeInt"   		: "java.lang.Integer",
+			"NonNegativeFloat" 		: "java.lang.Double",
+			"PositiveInt"      		: "java.lang.Integer",
+			"PositiveFloat"    		: "java.lang.Double",
+			"NegativeInt"      		: "java.lang.Integer",
+			"NegativeFloat"    		: "java.lang.Double",
+			"CustomerConnection"    : "graphql.relay.Connection<com.carmazing.sales.generated.types.Customer>",
+			"Upload"             	: "org.springframework.web.multipart.MultipartFile",
 	]
 }
