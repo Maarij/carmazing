@@ -20,8 +20,7 @@ import java.util.function.BiFunction;
 @Configuration
 public class InstrumentationConfig {
 
-    private BiFunction<FieldAndArguments, FieldValidationEnvironment, Optional<GraphQLError>>
-    ageMustBetween18To70() {
+    private BiFunction<FieldAndArguments, FieldValidationEnvironment, Optional<GraphQLError>> ageMustBetween18To70() {
         return (fieldAndArguments, fieldValidationEnvironment) -> {
             Map<String, Object> argCustomer = fieldAndArguments.getArgumentValue(
                     DgsConstants.MUTATION.ADDNEWCUSTOMER_INPUT_ARGUMENT.Customer);
@@ -36,8 +35,7 @@ public class InstrumentationConfig {
         };
     }
 
-    private BiFunction<FieldAndArguments, FieldValidationEnvironment, Optional<GraphQLError>>
-    emailMustNotGmail() {
+    private BiFunction<FieldAndArguments, FieldValidationEnvironment, Optional<GraphQLError>> emailMustNotGmail() {
         return (fieldAndArguments, fieldValidationEnvironment) -> {
             Map<String, Object> argCustomer = fieldAndArguments.getArgumentValue(
                     DgsConstants.MUTATION.ADDNEWCUSTOMER_INPUT_ARGUMENT.Customer);
