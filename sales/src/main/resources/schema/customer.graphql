@@ -38,3 +38,8 @@ type CustomerPagination {
     totalPage               : Int!
     totalElement            : Long!
 }
+
+input UpdateCustomerInput {
+    phone       : String
+    email       : String
+}

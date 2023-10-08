@@ -5,9 +5,11 @@ import com.carmazing.sales.datasource.entity.CustomerDocument;
 import com.carmazing.sales.datasource.repository.CustomerRepository;
 import com.carmazing.sales.generated.types.AddAddressInput;
 import com.carmazing.sales.generated.types.AddCustomerInput;
+import com.carmazing.sales.generated.types.UpdateCustomerInput;
 import com.carmazing.sales.mapper.AddressMapper;
 import com.carmazing.sales.mapper.CustomerMapper;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,6 +51,18 @@ public class CustomerCommandService {
         documentEntity.setDocumentPath(uploadedDocumentPath);
 
         customer.getDocuments().add(documentEntity);
+
+        return customerRepository.save(customer);
+    }
+
+    public Customer updateCustomer(Customer customer, UpdateCustomerInput customerUpdate) {
+        if (StringUtils.isNotBlank(customerUpdate.getEmail())) {
+            customer.setEmail(customerUpdate.getEmail());
+        }
+
+        if (StringUtils.isNotBlank(customerUpdate.getPhone())) {
+            customer.setPhone(customerUpdate.getPhone());
+        }
 
         return customerRepository.save(customer);
     }

@@ -18,4 +18,9 @@ type Mutation {
         documentType    : String! @NotBlank @Size(max: 30)
         documentFile    : Upload!
     ): CustomerMutationResponse!
+
+    updateExistingCustomer(
+        customer        : UniqueCustomerInput!
+        customerUpdate  : UpdateCustomerInput!
+    ): CustomerMutationResponse!
 }
