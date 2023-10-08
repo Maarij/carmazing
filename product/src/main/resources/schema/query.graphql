@@ -27,4 +27,11 @@ type Query {
         after               : String,
         before              : String
     ): SeriesConnection
+
+    modelsPagination(
+        modelInput          : ModelInput
+        priceInput          : NumericComparisonInput
+        page                : Int
+        size                : Int
+    ): ModelPagination
 }

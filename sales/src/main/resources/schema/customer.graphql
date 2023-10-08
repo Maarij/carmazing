@@ -7,3 +7,19 @@ type Customer {
     salesOrders         : [SalesOrder!]
     addresses           : [Address!]
 }
+
+input AddCustomerInput {
+    fullName    : String!
+    birthDate   : Date!
+    email       : String!
+    phone       : String!
+    addresses   : [AddAddressInput!]
+}
+
+input UniqueCustomerInput {
+    """
+    Backend must check that one of uuid or email exists, but not both
+    """
+    uuid    : String
+    email   : String
+}

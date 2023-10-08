@@ -1,4 +1,4 @@
-type Model  {
+type Model @connection {
     uuid            : String!
     name            : String
     onTheRoadPrice  : PositiveFloat!
@@ -18,3 +18,12 @@ type Model  {
     features        : [Feature!]
     series          : Series
 }
+
+type ModelPagination {
+    modelConnection         : ModelConnection
+    page                    : Int!
+    size                    : Int!
+    totalPage               : Int!
+    totalElement            : Long!
+}
+

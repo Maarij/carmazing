@@ -9,6 +9,8 @@ import com.carmazing.product.generated.types.NumericComparisonInput;
 import com.carmazing.product.generated.types.SeriesInput;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -88,5 +90,58 @@ public class ModelQueryService {
                         priceInput.get().getHighValue() : value + 1;
                 yield ModelSpecification.priceBetween(value, highValue);
         };
+    }
+
+    public Page<Model> findModels(Optional<ModelInput> input,
+                                  Optional<NumericComparisonInput> priceInput,
+                                  Integer page,
+                                  Integer size) {
+        var modelInput = input.orElse(new ModelInput());
+        var seriesInput = modelInput.getSeries() == null ? new SeriesInput()
+                : modelInput.getSeries();
+        var manufacturerInput = seriesInput.getManufacturer() == null ?
+                new ManufacturerInput() : seriesInput.getManufacturer();
+
+        var priceSpecification = priceSpecificationFrom(priceInput);
+
+        var specification = Specification.where(
+                StringUtils.isNotBlank(manufacturerInput.getName()) ?
+                        ModelSpecification.manufacturerNameContainsIgnoreCase(
+                                manufacturerInput.getName()
+                        ) : null
+        ).and(StringUtils.isNotBlank(manufacturerInput.getOriginCountry()) ?
+                        ModelSpecification.manufacturerOriginCountryContainsIgnoreCase(
+                                manufacturerInput.getOriginCountry()
+                        ) : null
+        ).and(StringUtils.isNotBlank(seriesInput.getName()) ?
+                        ModelSpecification.seriesNameContainsIgnoreCase(
+                                seriesInput.getName()
+                        ) : null
+        ).and(StringUtils.isNotBlank(modelInput.getName()) ?
+                        ModelSpecification.modelNameContainsIgnoreCase(
+                                modelInput.getName()
+                        ) : null
+        ).and(modelInput.getIsAvailable() != null ?
+                        ModelSpecification.available(modelInput.getIsAvailable())
+                        : null
+        ).and(modelInput.getTransmission() != null ?
+                        ModelSpecification.transmissionEquals(modelInput.getTransmission())
+                        : null
+        ).and(!CollectionUtils.isEmpty(modelInput.getExteriorColors()) ?
+                        ModelSpecification.exteriorColorsLikeIgnoreCase(modelInput.getExteriorColors())
+                        : null
+        ).and(priceSpecification);
+
+        var sortOrders = ModelSpecification.sortOrdersFrom(
+                modelInput.getSorts()
+        );
+
+        var pageable = PageRequest.of(
+                Optional.ofNullable(page).orElse(0),
+                Optional.ofNullable(size).orElse(50),
+                Sort.by(sortOrders)
+        );
+
+        return modelRepository.findAll(specification, pageable);
     }
 }
